@@ -19,7 +19,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.APP_URL ?? "http://localhost:3000"),
+  metadataBase: (() => {
+    const raw = process.env.APP_URL;
+    if (!raw) return new URL('http://localhost:3000');
+    try {
+      return new URL(raw);
+    } catch {
+      return new URL(`https://${raw}`);
+    }
+  })(),
   title: {
     default: "Relay — Turn every inquiry into a qualified lead",
     template: "%s · Relay",
