@@ -102,7 +102,7 @@ export default async function AdminLeadsPage({
             leads={leads}
             sort={sort}
             dir={dir}
-            sortHref={(s, d) => href(base, { sort: s, dir: d, page: undefined })}
+            status={statusFilter}
           />
           <div className="flex items-center justify-between text-sm text-zinc-400">
             <span>

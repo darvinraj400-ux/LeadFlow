@@ -19,24 +19,28 @@ function SortHead({
   column,
   sort,
   dir,
-  sortHref,
+  status,
   className,
 }: {
   label: string;
   column: 'score' | 'created_at';
   sort: string;
   dir: string;
-  sortHref: (sort: string, dir: string) => string;
+  status: string | null;
   className?: string;
 }) {
+  // Same semantics the server page used: toggle dir on the active column,
+  // default to desc otherwise; preserve the status filter, reset to page 1.
   const active = sort === column;
   const nextDir = active && dir === 'desc' ? 'asc' : 'desc';
+  const params = new URLSearchParams();
+  if (status) params.set('status', status);
+  params.set('sort', column);
+  params.set('dir', nextDir);
+  const href = `/admin/leads?${params.toString()}`;
   return (
     <TableHead className={cn('text-zinc-400', className)}>
-      <Link
-        href={sortHref(column, nextDir)}
-        className="inline-flex items-center gap-1 hover:text-zinc-100"
-      >
+      <Link href={href} className="inline-flex items-center gap-1 hover:text-zinc-100">
         {label}
         <span className="text-xs">{active ? (dir === 'desc' ? '▼' : '▲') : ''}</span>
       </Link>
@@ -48,12 +52,12 @@ export function LeadTable({
   leads,
   sort,
   dir,
-  sortHref,
+  status,
 }: {
   leads: Lead[];
   sort: string;
   dir: string;
-  sortHref: (sort: string, dir: string) => string;
+  status: string | null;
 }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-zinc-800">
@@ -68,7 +72,7 @@ export function LeadTable({
               column="score"
               sort={sort}
               dir={dir}
-              sortHref={sortHref}
+              status={status}
               className="text-right"
             />
             <TableHead className="text-zinc-400">Intent</TableHead>
@@ -78,7 +82,7 @@ export function LeadTable({
               column="created_at"
               sort={sort}
               dir={dir}
-              sortHref={sortHref}
+              status={status}
             />
             <TableHead className="text-zinc-400">Actions</TableHead>
           </TableRow>
