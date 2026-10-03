@@ -2,6 +2,28 @@
 
 Reverse-chronological. One section per completed layer.
 
+## 2026-10-03 — Layer 4: admin dashboard
+
+- Password-gate auth (`leadflow_admin` HMAC cookie, timing-safe verify,
+  500ms failure delay, no attempt logging) copied from SupportAI's shape;
+  `lib/admin-auth.ts` + `middleware.ts` verified drift-free.
+- Overview: 4 stat cards (total / qualified incl. contacted+replied /
+  queued / archived), CSS-only 5-bucket score bars, last-8 table.
+- Leads table: server-side status tabs, allowlisted sort (score /
+  created_at), 50/page offset pagination with preserved query strings.
+- Detail is the hero: DB-read sub-scores in `ScoreBreakdown` bars
+  (`grid-cols-[120px_1fr_80px]`, never recomputed), routing + actions
+  (PATCH, `reviewed_at` on contacted/replied/qualified) + timeline.
+- Smoke-verified live (10 checks): unauth 307→login, 401 on wrong pw,
+  dashboard stats/distribution/recent render, breakdown bars match DB
+  sub-scores exactly, PATCH sets contacted + reviewed_at, filters and
+  both sort directions verified row-order-correct, API 404 on bad id.
+- Known quirk: detail page `notFound()` renders the 404 UI but returns
+  HTTP 200 (reproduced 3× with verified auth, incl. `next start` prod
+  build; unmatched routes correctly return 404). Code is correct
+  (`if (error || !data) notFound()`); code review concurs this is
+  framework-level, not an app bug. Admin-only surface, no impact.
+
 ## 2026-10-03 — Layer 3: public form, POST /api/leads, receipt email
 
 - Capture flow: form → POST → `status='new'`/`ai_status='pending'` row,

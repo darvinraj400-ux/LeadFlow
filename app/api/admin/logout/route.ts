@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+import { clearAdminCookie } from '@/lib/admin-auth';
 
-// Layer 1 stub — admin logout lands in a later layer.
 export async function POST() {
-  return NextResponse.json({ error: "Not implemented" }, { status: 501 });
+  const res = NextResponse.json({ ok: true });
+  clearAdminCookie(res);
+  return res;
 }
