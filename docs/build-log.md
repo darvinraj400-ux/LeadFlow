@@ -2,6 +2,25 @@
 
 Reverse-chronological. One section per completed layer.
 
+## 2026-10-03 — Layer 3: public form, POST /api/leads, receipt email
+
+- Capture flow: form → POST → `status='new'`/`ai_status='pending'` row,
+  `{ok, reference_code}` returns immediately, enrichment runs via
+  `void runEnrichment(id).catch()` (extract → score → route → emails).
+- Deliberate design decision: the AI's output is internal. The lead sees a
+  fixed-template receipt — no AI-generated text, no mention of analysis.
+- Routing: ≥70 auto_reply/qualified, 30–69 human_review/queued,
+  <30 archive/archived. Receipt only for auto_reply + human_review;
+  sales notified for the same two. Failures → ai_status='failed',
+  status stays 'new'. Emails never flip ai_status.
+- Accepted limitations: in-memory IP rate limit (5/10min, resets on cold
+  start); daily-counter ref codes can collide under concurrency (unique
+  constraint turns it into a 500, not silent dupes); Vercel may kill the
+  background task (~10s) leaving rows `pending` — admin can surface them.
+- Smoke-verified live: warm POST 200 in 377ms (pre-enrichment),
+  enrichment to `enriched` in ~3s, 400 on invalid, 429 on 6th rapid,
+  Resend accepted receipt + sales mail (timestamps set).
+
 ## 2026-10-03 — Layer 2: schema, rubric, extraction, seed
 
 - `docs/schema.sql` is the source of truth: `leads` table, 3 indexes,
