@@ -1,16 +1,17 @@
 import { NextResponse } from 'next/server';
+import { waitUntil } from '@vercel/functions';
 import { createAdminClient } from '@/lib/supabase';
 import { isAdminRequest } from '@/lib/admin-auth';
 import { extractLead } from '@/lib/ai/extract';
 import { scoreLead } from '@/lib/ai/rubric';
 import { leadFormSchema, toFieldErrors } from '@/lib/leads/schema';
+import { routeByScore } from '@/lib/leads/routing';
 import { sendReceiptEmail } from '@/lib/email/send-receipt';
 import { notifySales } from '@/lib/email/notify-sales';
 
-// Routing thresholds: score >= 70 auto-handles, 30-69 needs a human,
-// below 30 is archived without contact.
-const AUTO_REPLY_MIN = 70;
-const HUMAN_REVIEW_MIN = 30;
+// Groq enrichment takes 1-3s after the response; give the function room
+// on Vercel (Hobby ceiling is 60s).
+export const maxDuration = 30;
 
 // In-memory rate limit: 5 submissions per IP per 10 minutes. Not
 // distributed and resets on cold start — accepted limitation for v1.
@@ -97,18 +98,8 @@ async function runEnrichment(id: string): Promise<void> {
       await db.from('leads').update({ ai_status: 'failed' }).eq('id', id);
       return;
     }
-    const routing_decision =
-      scores.total >= AUTO_REPLY_MIN
-        ? 'auto_reply'
-        : scores.total >= HUMAN_REVIEW_MIN
-          ? 'human_review'
-          : 'archive';
-    const status =
-      routing_decision === 'auto_reply'
-        ? 'qualified'
-        : routing_decision === 'human_review'
-          ? 'queued'
-          : 'archived';
+    // Shared with the seed script — demo rows route exactly like live ones.
+    const { status, routing_decision } = routeByScore(scores.total);
 
     const { error: updError } = await db
       .from('leads')
@@ -239,12 +230,15 @@ export async function POST(req: Request) {
     );
   }
 
-  // Respond first — enrichment must not hold up the response.
-  const response = NextResponse.json({ ok: true, reference_code });
-  void runEnrichment(data.id).catch((err) =>
-    console.error('enrichment failed', err),
+  // Respond first — enrichment must not hold up the response. waitUntil
+  // extends the serverless lifetime until the promise settles; a bare
+  // floating promise would be frozen (and killed) on Vercel after send.
+  waitUntil(
+    runEnrichment(data.id).catch((err) => {
+      console.error('enrichment failed', err);
+    }),
   );
-  return response;
+  return NextResponse.json({ ok: true, reference_code });
 }
 
 const LIST_STATUSES = [

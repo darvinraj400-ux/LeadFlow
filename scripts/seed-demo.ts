@@ -3,6 +3,7 @@
 import './_env';
 
 import { scoreLead, type Extraction } from '../lib/ai/rubric';
+import { routeByScore } from '../lib/leads/routing';
 
 // Demo seed (Layer 2). No AI calls: every extraction is pre-baked and the
 // score comes from the deterministic scoreLead(). Hand-computed expected
@@ -405,6 +406,8 @@ async function main(): Promise<void> {
           `Update expectedTotal or fix the rubric.`,
       );
     }
+    // Same routing the live pipeline applies — demo rows land routed.
+    const { status, routing_decision } = routeByScore(breakdown.total);
     const date = new Date(Date.now() - i * 11 * 3600 * 1000);
     const yyyymmdd = date.toISOString().slice(0, 10).replace(/-/g, '');
     return {
@@ -430,9 +433,8 @@ async function main(): Promise<void> {
       score_intent_clarity: breakdown.intent_clarity,
       score_budget_signal: breakdown.budget_signal,
       score_total: breakdown.total,
-      // Routing is a later layer's job — seed leaves leads fresh and unrouted.
-      status: 'new',
-      routing_decision: null as string | null,
+      status,
+      routing_decision,
     };
   });
 

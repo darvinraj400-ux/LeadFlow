@@ -2,6 +2,20 @@
 
 Reverse-chronological. One section per completed layer.
 
+## 2026-10-04 — Fixes: Vercel enrichment lifetime + seed routing
+
+- Enrichment died on Vercel: the floating `void runEnrichment()` promise
+  was frozen when the serverless function returned the response, leaving
+  rows `ai_status='pending'` forever (seen live on LF-20261004-0001).
+  Fix: `waitUntil()` from `@vercel/functions` (new dep) extends the
+  lifetime until the promise settles; response still returns immediately.
+  Added `export const maxDuration = 30` headroom for the 1–3s Groq call.
+- Seed left every row `status='new'` / `routing_decision=null`, so overview
+  cards read 20/0/0/0. Fix: new `lib/leads/routing.ts` `routeByScore()`
+  (≥70 qualified/auto_reply, 30–69 queued/human_review, <30
+  archived/archive), used by both the route and the seed — one function,
+  no duplicated thresholds. Scores and extractions untouched.
+
 ## 2026-10-03 — Layer 6: polish, metadata, README
 
 - Verified scaffolding: root + admin error boundaries (dev-only logging,
