@@ -2,6 +2,17 @@
 
 Reverse-chronological. One section per completed layer.
 
+## 2026-10-03 — Layer 5: case study
+
+- `app/(marketing)/case-study/page.tsx`: engineering write-up for
+  recruiters — problem, pipeline diagram, six technical decisions
+  distilled from this log, honest limitations, facts grid.
+- Screenshots in `public/case-study/` (overview 813×262, leads
+  1654×1072, detail 1215×911, breakdown 1654×1381 — dims read from PNG
+  headers) rendered with `next/image` + real width/height.
+- Deliberate content call: receipt copy stays fixed-template, AI output
+  stays internal — noted in the decisions, not just the code.
+
 ## 2026-10-03 — Layer 4: admin dashboard
 
 - Password-gate auth (`leadflow_admin` HMAC cookie, timing-safe verify,
