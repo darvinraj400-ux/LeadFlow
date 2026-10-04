@@ -20,9 +20,9 @@ const DECISIONS: { title: string; body: string; code?: string }[] = [
     code: "if (e.intent === 'spam') return all zeros // 0/100 by construction",
   },
   {
-    title: 'Fire-and-forget enrichment',
-    body: 'The POST inserts the row and returns the reference code before the AI runs — 377ms warm on the measured path. Extraction finishes about 3 seconds later in the same serverless invocation via void runEnrichment().catch(). The documented trade-off: if Vercel kills the function mid-flight, the lead stays ai_status=\'pending\', and the admin UI surfaces that state instead of hiding it.',
-    code: 'void runEnrichment(id).catch(...) // never await, never throw',
+    title: 'Fire-and-forget enrichment via waitUntil',
+    body: 'The POST returns the reference code before the AI runs. The visitor sees success in ~370ms; enrichment finishes ~3s later in the same serverless invocation. First version used a floating promise (`void runEnrichment()`) — which silently died on Vercel because the function freezes as soon as the response is sent. Fixed with waitUntil from @vercel/functions, which extends the function lifetime until the promise settles. Would move to a proper job queue at real volume.',
+    code: "import { waitUntil } from '@vercel/functions';\nwaitUntil(runEnrichment(id).catch(console.error));\nreturn NextResponse.json({ ok: true, reference_code });",
   },
   {
     title: 'HTML injection in email templates',
@@ -257,20 +257,18 @@ export default function CaseStudyPage() {
           </h2>
           <ul className="mt-6 flex max-w-[70ch] list-disc flex-col gap-4 pl-5 text-base leading-relaxed text-zinc-400">
             <li>
-              Mid-flight persistence: enrichment depends on the serverless
-              function surviving past the response. `waitUntil` from
-              `@vercel/functions` or a proper job queue would make it durable
-              instead of best-effort.
-            </li>
-            <li>
               The rate limit is a single-instance in-memory Map. Fine for a
-              demo, resets on cold start, trivially shardable around. Upstash
-              Redis with a sliding window is the production shape.
+              demo, resets on cold start. Upstash Redis + sliding window is
+              the production shape.
             </li>
             <li>
               Receipt delivery to non-owner emails requires a verified Resend
               domain. I would spend the $10/yr on a real domain if this were a
               paid product instead of a portfolio piece.
+            </li>
+            <li>
+              Admin auth is a shared password, not a user system. Fine for a
+              portfolio demo, wrong for multi-tenant.
             </li>
           </ul>
         </section>
@@ -283,8 +281,8 @@ export default function CaseStudyPage() {
           </h2>
           <dl className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ['~4,900 lines', 'across ~75 tracked files'],
-              ['8 commits', 'layers 1–5 plus two fixes'],
+              ['~5,200 lines', 'across ~80 tracked files'],
+              ['13 commits', 'layers 1–6 plus prod fixes'],
               ['20 seeded leads', 'score plan 5/5/5/3/2, verified live'],
               ['All green', 'tsc, build, seed — zero paid tools'],
             ].map(([k, v]) => (
