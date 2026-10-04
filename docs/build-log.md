@@ -2,6 +2,25 @@
 
 Reverse-chronological. One section per completed layer.
 
+## 2026-10-03 — Layer 6: polish, metadata, README
+
+- Verified scaffolding: root + admin error boundaries (dev-only logging,
+  digest surfaced, dark zinc), four loading skeletons shaped like their
+  content (landing, overview, table, detail), dark 404 with disclaimer.
+  Added what was missing: `app/admin/error.tsx`, all three admin
+  `loading.tsx` files, dark restyles of root error/loading/404.
+- Metadata: root title template + OG + Twitter, landing title override,
+  case-study title + description, `noindex` on `/admin/login` via its own
+  layout (client pages can't export metadata). robots allows / and
+  disallows /admin + /api; sitemap lists / and /case-study.
+- Mobile (inspection only, no device lab): no fixed widths anywhere;
+  grids collapse to single column below sm/lg; tables scroll inside
+  `overflow-x-auto`; fixed grid tracks total ~260px < 375px. Nothing found
+  that forces horizontal scroll.
+- README rewritten from scratch (98 lines): decision, stack, setup, env
+  table, schema pointer, Vercel notes with the `https://` APP_URL rule,
+  deliberate scope cuts, MIT.
+
 ## 2026-10-03 — Layer 5: case study
 
 - `app/(marketing)/case-study/page.tsx`: engineering write-up for

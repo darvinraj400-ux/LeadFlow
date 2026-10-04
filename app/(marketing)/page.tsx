@@ -1,6 +1,13 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { ArrowRight, Gauge, Inbox, Route } from 'lucide-react';
 import { LeadForm } from '@/components/form/LeadForm';
+
+export const metadata: Metadata = {
+  title: 'Inbound that routes itself',
+  description:
+    'Relay qualifies, scores, and routes every inbound lead — try the live demo form.',
+};
 
 const FEATURES = [
   {

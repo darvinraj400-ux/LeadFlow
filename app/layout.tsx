@@ -34,6 +34,20 @@ export const metadata: Metadata = {
   },
   description:
     "Relay is a fictional CRM product that scores and routes inbound leads with AI-assisted qualification.",
+  openGraph: {
+    title: "Relay — Turn every inquiry into a qualified lead",
+    description:
+      "Relay qualifies, scores, and routes every inbound lead — so your team only sees the ones worth their time.",
+    type: "website",
+    url: "/",
+    siteName: "Relay",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Relay — Turn every inquiry into a qualified lead",
+    description:
+      "Relay qualifies, scores, and routes every inbound lead — so your team only sees the ones worth their time.",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
