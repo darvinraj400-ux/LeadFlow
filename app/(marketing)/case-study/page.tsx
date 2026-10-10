@@ -5,51 +5,48 @@ import { buttonVariants } from '@/components/ui/button';
 export const metadata: Metadata = {
   title: 'Case Study — LeadFlow',
   description:
-    'How LeadFlow was built: AI classification with deterministic rubric scoring, fire-and-forget enrichment, Groq primary with Gemini fallback, all on free tiers.',
+    'How LeadFlow was built: an AI pipeline where the AI classifies and the code scores, plus the Signal redesign that made it look like an instrument.',
 };
 
-const DECISIONS: { title: string; body: string; code?: string }[] = [
-  {
-    title: 'AI classifies, code scores',
-    body: 'The model never outputs a number. It returns discrete categories — company_size, industry, intent, budget_signal — and a pure TypeScript function maps them to points with fixed weights (company 30, industry 25, intent 25, budget 20). The score is deterministic given the extraction: a 92 is traceable to a specific model output plus a specific rule, which is the whole answer to the black-box objection.',
-    code: 'scoreLead(extraction) // same input, same score, every time',
-  },
-  {
-    title: 'Spam is a hard override, not a point deduction',
-    body: 'The rubric bottomed out at 8/100 for obvious spam — solo, unknown industry, no budget signal. An 8 reads as "some fit," which is wrong; spam has no fit. I added an early return: intent === spam scores 0 across the board. Routing treats 0 as definitive. Three lines, large narrative payoff.',
-    code: "if (e.intent === 'spam') return all zeros // 0/100 by construction",
-  },
-  {
-    title: 'Fire-and-forget enrichment via waitUntil',
-    body: 'The POST returns the reference code before the AI runs. The visitor sees success in ~370ms; enrichment finishes ~3s later in the same serverless invocation. First version used a floating promise (`void runEnrichment()`) — which silently died on Vercel because the function freezes as soon as the response is sent. Fixed with waitUntil from @vercel/functions, which extends the function lifetime until the promise settles. Would move to a proper job queue at real volume.',
-    code: "import { waitUntil } from '@vercel/functions';\nwaitUntil(runEnrichment(id).catch(console.error));\nreturn NextResponse.json({ ok: true, reference_code });",
-  },
-  {
-    title: 'HTML injection in email templates',
-    body: 'Security review caught this one before it shipped: the lead\'s name and company went unescaped into the receipt HTML, and the AI summary into the sales notification. An attacker-controlled string rendered in the sales inbox inherits real trust. I added lib/email/escape-html.ts — four replacements applied to every interpolated value — and stripped newlines from the subject line.',
-    code: 'escapeHtml(name) // & < > " \' — text part stays raw',
-  },
-  {
-    title: 'RSC function-prop boundary',
-    body: 'The leads table passed a sortHref builder from a server component into a client component. TypeScript was happy, next build was happy — it only crashes at request time in production with "Functions cannot be passed directly to Client Components." I moved the URL builder into the client component, which already held everything it needed. The class of bug that only surfaces on first deploy.',
-    code: 'props: leads, sort, dir, status // serializable only',
-  },
-  {
-    title: 'Schema/type drift prevention',
-    body: 'Three artifacts must agree on every enum literal: the Extraction TS type, the zod schema fed to generateObject, and the SQL CHECK constraints. The first two are pinned together by a compile-time IsExact guard, so changing one side breaks the build until the other follows. The SQL side is covered by a header note and a seed script that asserts exact totals — 20 hand-computed scores that fail loudly on rubric drift.',
-    code: 'IsExact<z.infer<schema>, Extraction> // drift = build error',
-  },
-];
-
 const FLOW = [
-  'Lead submits form',
-  'POST /api/leads',
-  'reference code (immediate)',
-  'extract via Groq',
+  'Form',
+  '/api/leads',
+  'insert (pending)',
+  'return reference code',
+  'background: extract via Groq',
   'score via rubric',
   'route',
   'receipt + sales notify',
-  'admin dashboard',
+  'admin',
+];
+
+const DECISIONS = [
+  {
+    title: 'AI classifies, code scores.',
+    body: 'The AI returns discrete categories (company_size, industry, intent, budget_signal). A pure function maps them to points with fixed weights. The total is deterministic given the extraction. Any number the UI shows is traceable to a model output and a specific rule.',
+  },
+  {
+    title: 'Fire-and-forget enrichment with `waitUntil`.',
+    body: 'The POST returns the reference code in ~370ms. Enrichment runs after. On Vercel, a floating promise dies when the response returns — I hit exactly that in production, with a stranded pending row to prove it. Fixed with `waitUntil` from `@vercel/functions`, which extends the function lifetime until the promise settles. Verified live: submissions reach the DB enriched within 3s.',
+    code: 'waitUntil(runEnrichment(id).catch(console.error));',
+  },
+  {
+    title: 'Spam is a hard override, not a point deduction.',
+    body: 'The rubric floor is 8/100 for obvious spam. Added an early return: `if (intent === \'spam\') return all zeros`. Small rule, large narrative payoff — 0 reads as definitive to the UI, 8 doesn\'t.',
+  },
+  {
+    title: 'The Signal design system — one instrument across marketing and admin.',
+    body: 'Space Grotesk for display, Inter for body, JetBrains Mono for every number. The mono is doing the heavy lifting: every score, ID, date, and status decision uses it. The number 78 is not "a metric in a card" — it is the product\'s output rendered in the font the product\'s output deserves.',
+  },
+  {
+    title: 'Custom cursor, applied with restraint.',
+    body: 'Desktop-only, gated on `(pointer: fine)` and viewport ≥ 1024px. A cyan dot follows the cursor exactly, a ring lerps behind at 80ms. Hidden over inputs so the caret is visible. The rest of the site does not animate on hover — only the cursor. One signature micro-interaction, not ten.',
+  },
+  {
+    title: 'HTML injection in email templates.',
+    body: 'Caught during review. User-supplied name/company went unescaped into the receipt HTML. Fixed with `lib/email/escape-html.ts` and newline stripping on the sales-notification subject. A bug that would have shipped silently.',
+    code: 'escapeHtml(name) // & < > " \' — text part stays raw',
+  },
 ];
 
 export default function CaseStudyPage() {
@@ -59,15 +56,14 @@ export default function CaseStudyPage() {
         {/* Hero */}
         <section className="py-20 md:py-28">
           <p className="text-sm font-medium tracking-wide text-accent">Case Study</p>
-          <h1 className="mt-3 max-w-[20ch] text-4xl font-semibold tracking-tight text-foreground md:text-6xl">
-            LeadFlow — inbound that routes itself
+          <h1 className="mt-3 max-w-[24ch] font-display text-4xl font-semibold tracking-tight md:text-6xl">
+            LeadFlow — an AI pipeline where the AI classifies and the code scores
           </h1>
           <p className="mt-5 max-w-[70ch] text-base leading-relaxed text-foreground-muted">
             LeadFlow qualifies, scores, and routes inbound B2B leads through a
-            public form, a background AI pipeline, and an admin dashboard. The
-            non-trivial part is the scoring contract: the model classifies, a
-            fixed rubric scores, and every number in the UI is auditable back
-            to a rule.
+            public form, a background enrichment pipeline, and an admin
+            dashboard. The non-trivial part is the scoring contract: a fixed
+            rubric turns model classifications into auditable numbers.
           </p>
           <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-3 text-sm">
             <div>
@@ -77,17 +73,17 @@ export default function CaseStudyPage() {
             <div>
               <dt className="text-foreground-subtle">Stack</dt>
               <dd className="mt-1 text-foreground">
-                Next.js 15 · Supabase · Groq / Gemini · Resend · Vercel.
+                Next.js 15 · Supabase Postgres · Groq / Gemini · Vercel · Space Grotesk + JetBrains Mono.
               </dd>
             </div>
             <div>
               <dt className="text-foreground-subtle">Timeline</dt>
-              <dd className="mt-1 text-foreground">Built over 2 days.</dd>
+              <dd className="mt-1 text-foreground">October 3–10, 2026.</dd>
             </div>
           </dl>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href="https://lead-flow-sable.vercel.app/"
+              href="https://lead-flow-sable.vercel.app"
               target="_blank"
               rel="noreferrer"
               className={buttonVariants({ size: 'lg' })}
@@ -110,15 +106,15 @@ export default function CaseStudyPage() {
           </div>
           <figure className="mt-14">
             <Image
-              src="/case-study/overview.png"
-              alt="Relay admin pipeline overview with stats and score distribution"
-              width={1654}
-              height={1434}
+              src="/case-study/hero-score.png"
+              alt="Relay landing hero showing a live lead score of 78 with sub-score bars"
+              width={1440}
+              height={900}
               sizes="100vw"
-              className="w-full rounded-xl border border-border shadow-elevated"
+              className="w-full rounded-lg border border-border shadow-elevated"
             />
             <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
-              The pipeline at a glance — every lead scored, routed, and reviewable.
+              78/100. Every point traceable to a rubric rule and a model output.
             </figcaption>
           </figure>
         </section>
@@ -126,32 +122,28 @@ export default function CaseStudyPage() {
         {/* 1. Problem */}
         <section className="border-t border-border py-16 md:py-20">
           <p className="text-sm font-medium tracking-wide text-accent">01 — The problem</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-            Small sales teams drown in inbound they can&apos;t triage
+          <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight md:text-3xl">
+            Small sales teams drown in inbound
           </h2>
           <div className="mt-6 flex max-w-[70ch] flex-col gap-5 text-base leading-relaxed text-foreground-muted">
             <p>
               A five-person B2B sales team gets a few dozen inbound messages a
               week: demo requests next to job seekers next to SEO cold pitches.
               Reading all of them costs hours; ignoring them costs pipeline.
-              What the team needs is not a smarter inbox — it is a front door
-              that decides, in seconds, which messages deserve a human.
+              What the team needs is a front door that decides, in seconds,
+              which messages deserve a human.
             </p>
             <p>
-              The obvious answer — &quot;AI ranks your leads 0-100&quot; — is one I
-              didn&apos;t trust enough to build. A model emitting a bare number
-              is unauditable: when a rep asks why this lead is a 78 and that
-              one a 72, &quot;the model felt like it&quot; ends the
-              conversation. Nobody stakes quota on a number nobody can explain,
-              so the tool gets ignored and the spreadsheet comes back.
+              The AI-scoring market answered with a black box — “this lead is
+              78” with no audit trail. Nobody stakes quota on a number nobody
+              can explain, so the tool gets ignored and the spreadsheet comes
+              back.
             </p>
             <p>
-              What v1 set out to prove is narrower: the AI classifies, the
-              rubric scores, and the number is auditable. The model outputs
-              discrete categories it can actually observe in the message;
-              deterministic code turns those categories into points. Every
-              score in the dashboard decomposes into four sub-scores with
-              published weights — and that decomposition is the product.
+              I split the job the other way: the AI only does what it is good
+              at (classification) and pure code does the math (scoring). The
+              result is a deterministic number that any developer or sales rep
+              could trace back to a category and a rule.
             </p>
           </div>
         </section>
@@ -159,19 +151,18 @@ export default function CaseStudyPage() {
         {/* 2. How it works */}
         <section className="border-t border-border py-16 md:py-20">
           <p className="text-sm font-medium tracking-wide text-accent">02 — How it works</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-            One form fill, eight steps, three seconds
+          <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight md:text-3xl">
+            One form fill, nine steps
           </h2>
           <p className="mt-6 max-w-[70ch] text-base leading-relaxed text-foreground-muted">
             The request path does the minimum — validate, insert, return a
             reference code — and everything expensive happens after the
-            response is already on its way back. The admin dashboard reads the
-            same rows the pipeline writes; there is no separate read model.
+            response is already on its way back.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-2">
             {FLOW.map((step, i) => (
               <span key={step} className="flex items-center gap-2">
-                <span className="rounded-lg border border-border-strong bg-surface px-3 py-2 font-mono text-xs text-foreground">
+                <span className="rounded-lg border border-border bg-surface px-3 py-2 font-mono text-xs text-foreground">
                   {step}
                 </span>
                 {i < FLOW.length - 1 ? (
@@ -180,29 +171,21 @@ export default function CaseStudyPage() {
               </span>
             ))}
           </div>
-          <figure className="mt-14">
-            <Image
-              src="/case-study/leads.png"
-              alt="Relay admin leads table with scores, intents, and statuses"
-              width={1654}
-              height={1072}
-              sizes="100vw"
-              className="w-full rounded-xl border border-border shadow-elevated"
-            />
-            <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
-              Every lead, filterable and sortable.
-            </figcaption>
-          </figure>
+          <pre className="mt-8 max-w-[70ch] overflow-x-auto rounded-lg bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-foreground">
+{`// AI returns categories. Code scores them.
+// Company fit = 22/30 — not because the AI decided so,
+// but because company_size = "mid" maps to 22 in a fixed table.`}
+          </pre>
         </section>
 
         {/* 3. Technical decisions */}
         <section className="border-t border-border py-16 md:py-20">
           <p className="text-sm font-medium tracking-wide text-accent">03 — Technical decisions</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+          <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight md:text-3xl">
             Six calls I&apos;d defend in an interview
           </h2>
           <div className="mt-8 flex flex-col gap-10">
-            {DECISIONS.map((d, i) => (
+            {DECISIONS.map((d) => (
               <div key={d.title}>
                 <h3 className="text-lg font-semibold text-foreground">
                   {d.title}
@@ -215,91 +198,182 @@ export default function CaseStudyPage() {
                     {d.code}
                   </pre>
                 ) : null}
-                {i === 0 ? (
-                  <figure className="mx-auto mt-6 max-w-md">
-                    <Image
-                      src="/case-study/breakdown.png"
-                      alt="Score breakdown panel showing sub-scores and weights"
-                      width={813}
-                      height={262}
-                      sizes="(max-width: 768px) 100vw, 448px"
-                      className="w-full rounded-xl border border-border shadow-elevated"
-                    />
-                    <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
-                      Sub-scores and weights, rendered straight from the DB. No
-                      client-side recomputation.
-                    </figcaption>
-                  </figure>
-                ) : null}
               </div>
             ))}
           </div>
+        </section>
+
+        {/* 4. Signal redesign */}
+        <section className="border-t border-border py-16 md:py-20">
+          <p className="text-sm font-medium tracking-wide text-accent">04 — The Signal redesign</p>
+          <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight md:text-3xl">
+            An instrument, not a dashboard
+          </h2>
+          <div className="mt-6 flex max-w-[70ch] flex-col gap-5 text-base leading-relaxed text-foreground-muted">
+            <p>
+              The original LeadFlow read as an AI-generated SaaS. Dark zinc,
+              Inter throughout, three-card feature row. Correct for the
+              product, indistinguishable from every other AI-adjacent
+              portfolio project. The redesign has a name — Signal — and a
+              thesis: an instrument, not a dashboard.
+            </p>
+            <p>
+              The palette is near-black with electric cyan as the signal
+              color. Signal-high/mid/low tokens map directly to routing
+              decisions (qualified / queued / archived). Typography pairs
+              Space Grotesk for headlines, Inter for body, and JetBrains Mono
+              for every number in the product. Spacing uses clamp tokens that
+              scale section rhythm between 96 and 160 pixels.
+            </p>
+            <p>
+              Three signature moments carry it. The hero shows a live score
+              animating from 00 to 78 with sub-score bars filling in
+              sequence. The pipeline section pins and scrolls horizontally
+              through five stages — ingest, extract, score, route, act. The
+              admin lead detail reveals the score breakdown on viewport
+              entry: bars fill left-to-right, staggered 120ms, with the total
+              counting up. Each moment reflects the product&apos;s actual
+              mechanics, not decoration.
+            </p>
+          </div>
           <figure className="mt-14">
             <Image
-              src="/case-study/detail.png"
-              alt="Full lead detail page with AI summary, extraction, routing, and timeline"
-              width={1669}
-              height={911}
+              src="/case-study/pipeline.png"
+              alt="Pipeline section showing Stage 3 with sub-score bars"
+              width={1440}
+              height={900}
               sizes="100vw"
-              className="w-full rounded-xl border border-border shadow-elevated"
+              className="w-full rounded-lg border border-border shadow-elevated"
             />
             <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
-              Full lead detail — AI summary, extraction, routing, timeline.
+              Five stages. One instrument.
+            </figcaption>
+          </figure>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <figure>
+              <Image
+                src="/case-study/bento.png"
+                alt="Asymmetric bento grid of product principles"
+                width={1440}
+                height={900}
+                sizes="100vw"
+                className="w-full rounded-lg border border-border shadow-elevated"
+              />
+              <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
+                Bento grid, asymmetric by design.
+              </figcaption>
+            </figure>
+            <figure>
+              <Image
+                src="/case-study/admin-overview.png"
+                alt="Admin overview with glass stat cards and score distribution"
+                width={1440}
+                height={900}
+                sizes="100vw"
+                className="w-full rounded-lg border border-border shadow-elevated"
+              />
+              <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
+                Same instrument on the admin side.
+              </figcaption>
+            </figure>
+          </div>
+          <figure className="mx-auto mt-8 max-w-[320px]">
+            <Image
+              src="/case-study/mobile-hero.png"
+              alt="Mobile hero with stacked score display"
+              width={750}
+              height={1688}
+              sizes="(max-width: 768px) 100vw, 320px"
+              className="w-full rounded-lg border border-border shadow-elevated"
+            />
+            <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
+              Mobile stacks, nothing scrolls sideways.
             </figcaption>
           </figure>
         </section>
 
-        {/* 4. Differently */}
+        {/* 5. Differently */}
         <section className="border-t border-border py-16 md:py-20">
-          <p className="text-sm font-medium tracking-wide text-accent">04 — What I&apos;d do differently</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+          <p className="text-sm font-medium tracking-wide text-accent">05 — What I&apos;d do differently</p>
+          <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight md:text-3xl">
             Three honest limitations
           </h2>
           <ul className="mt-6 flex max-w-[70ch] list-disc flex-col gap-4 pl-5 text-base leading-relaxed text-foreground-muted">
             <li>
-              The rate limit is a single-instance in-memory Map. Fine for a
-              demo, resets on cold start. Upstash Redis + sliding window is
-              the production shape.
+              <strong className="text-foreground">Receipt delivery on the free Resend tier is constrained.</strong>{' '}
+              The shared sender only delivers to the account owner. Verifying
+              a custom domain is the production fix ($10/yr); v1 ships with
+              the limitation documented.
             </li>
             <li>
-              Receipt delivery to non-owner emails requires a verified Resend
-              domain. I would spend the $10/yr on a real domain if this were a
-              paid product instead of a portfolio piece.
+              <strong className="text-foreground">Rate limiting is a Map, not Redis.</strong>{' '}
+              Single-instance in-memory. Fine for a demo, resets on cold
+              start. Upstash Redis + sliding window is the correct shape.
             </li>
             <li>
-              Admin auth is a shared password, not a user system. Fine for a
-              portfolio demo, wrong for multi-tenant.
+              <strong className="text-foreground">Admin auth is a shared password, not a user system.</strong>{' '}
+              Correct for a portfolio piece, wrong for multi-tenant. A real
+              version would move to Supabase Auth with RLS policies per user.
             </li>
           </ul>
         </section>
 
-        {/* 5. Under the hood */}
+        {/* 6. Under the hood */}
         <section className="border-t border-border py-16 md:py-20">
-          <p className="text-sm font-medium tracking-wide text-accent">05 — Under the hood</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+          <p className="text-sm font-medium tracking-wide text-accent">06 — Under the hood</p>
+          <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight md:text-3xl">
             The receipts
           </h2>
           <dl className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ['~5,200 lines', 'across ~80 tracked files'],
-              ['13 commits', 'layers 1–6 plus prod fixes'],
-              ['20 seeded leads', 'score plan 5/5/5/3/2, verified live'],
-              ['All green', 'tsc, build, seed — zero paid tools'],
+              ['31.6 kB / 155 kB', 'First Load JS for / (page / total)'],
+              ['22 commits', 'layers, fixes, and this rewrite'],
+              ['~5,200 lines', 'no test suite — verified live instead'],
+              ['All green', 'tsc, lint, build, seed — zero paid tools'],
             ].map(([k, v]) => (
               <div
                 key={k}
-                className="rounded-xl border border-border bg-surface p-5"
+                className="rounded-lg border border-border bg-surface p-5 shadow-card"
               >
-                <dt className="text-lg font-semibold text-foreground">{k}</dt>
+                <dt className="font-mono text-lg font-semibold text-foreground">{k}</dt>
                 <dd className="mt-1 text-sm text-foreground-muted">{v}</dd>
               </div>
             ))}
           </dl>
           <p className="mt-6 max-w-[70ch] text-base leading-relaxed text-foreground-muted">
-            Groq gpt-oss-120b primary, Gemini 3.1-flash-lite fallback. Supabase,
-            Groq, Gemini, Vercel, Resend, and GitHub all on free tiers — the
-            only bill for this project is $0.
+            Next.js 15 App Router, Tailwind v4, shadcn Base-UI, Supabase
+            Postgres, Groq + Gemini, Resend, Vercel. No 3D, no animation
+            library — the redesign was done with pure CSS, rAF, and
+            IntersectionObserver.
           </p>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <figure>
+              <Image
+                src="/case-study/admin-detail-reveal.png"
+                alt="Score breakdown mid-reveal with partially filled bars"
+                width={1440}
+                height={2400}
+                sizes="100vw"
+                className="w-full rounded-lg border border-border shadow-elevated"
+              />
+              <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
+                Mid-reveal: labels in, weights pending.
+              </figcaption>
+            </figure>
+            <figure>
+              <Image
+                src="/case-study/admin-detail.png"
+                alt="Lead detail settled with complete score breakdown"
+                width={1440}
+                height={900}
+                sizes="100vw"
+                className="w-full rounded-lg border border-border shadow-elevated"
+              />
+              <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
+                Settled a second later.
+              </figcaption>
+            </figure>
+          </div>
         </section>
 
         {/* Footer */}
@@ -317,8 +391,7 @@ export default function CaseStudyPage() {
             .
           </p>
           <p className="mt-2 text-xs">
-            Relay is a fictional CRM. LeadFlow is a portfolio piece — no real
-            customer data.
+            Relay is a fictional CRM. LeadFlow is a portfolio piece — no real customers.
           </p>
         </footer>
       </main>

@@ -2,6 +2,18 @@
 
 Reverse-chronological. One section per completed layer.
 
+## 2026-10-10 — Case study v2: Signal rewrite
+
+- Rewrote `/case-study` for the Signal redesign: new hero, six
+  decisions, dedicated redesign section, honest limitations, facts grid.
+- 7 screenshots captured live from production with headless Chromium
+  over CDP (Playwright MCP unavailable): hero, pipeline Stage 3,
+  bento, admin overview, detail mid-reveal (true mid-animation frame
+  via scroll-timing), detail settled, mobile hero. All < 500KB.
+- Debugging note: CDP `Runtime.evaluate` needs an invoked function —
+  a bare `() => {...}` arrow returns the function without running it,
+  which silently broke all scroll captures until spotted.
+
 ## 2026-10-04 — Fixes: Vercel enrichment lifetime + seed routing
 
 - Enrichment died on Vercel: the floating `void runEnrichment()` promise
