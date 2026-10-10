@@ -14,6 +14,11 @@ import { timeAgo } from '@/lib/format';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import type { Lead } from '@/lib/leads/types';
 
+// Must never prerender: this page reads live lead data (including PII).
+// Without this, `next build` bakes a static snapshot of the table at build
+// time and serves it to every admin visitor indefinitely.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminOverviewPage() {
   const db = createAdminClient();
 
