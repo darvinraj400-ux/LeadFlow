@@ -5,6 +5,7 @@ import { LeadForm } from '@/components/form/LeadForm';
 import { HeroAtmosphere } from '@/components/marketing/HeroAtmosphere';
 import { HeroScore } from '@/components/marketing/HeroScore';
 import { MagneticCta } from '@/components/marketing/MagneticCta';
+import { PipelineSection } from '@/components/marketing/PipelineSection';
 import { Reveal } from '@/components/marketing/Reveal';
 
 export const metadata: Metadata = {
@@ -211,6 +212,8 @@ export default function MarketingHomePage() {
           </div>
         </section>
       </main>
+
+      <PipelineSection />
 
       <footer className="border-t border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-8 font-mono text-xs text-foreground-muted">
