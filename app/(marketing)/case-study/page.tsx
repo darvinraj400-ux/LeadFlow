@@ -54,15 +54,15 @@ const FLOW = [
 
 export default function CaseStudyPage() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="min-h-screen bg-background text-foreground">
       <main className="mx-auto max-w-[1200px] px-6">
         {/* Hero */}
         <section className="py-20 md:py-28">
-          <p className="text-sm font-medium tracking-wide text-indigo-400">Case Study</p>
-          <h1 className="mt-3 max-w-[20ch] text-4xl font-semibold tracking-tight text-white md:text-6xl">
+          <p className="text-sm font-medium tracking-wide text-accent">Case Study</p>
+          <h1 className="mt-3 max-w-[20ch] text-4xl font-semibold tracking-tight text-foreground md:text-6xl">
             LeadFlow — inbound that routes itself
           </h1>
-          <p className="mt-5 max-w-[70ch] text-base leading-relaxed text-zinc-400">
+          <p className="mt-5 max-w-[70ch] text-base leading-relaxed text-foreground-muted">
             LeadFlow qualifies, scores, and routes inbound B2B leads through a
             public form, a background AI pipeline, and an admin dashboard. The
             non-trivial part is the scoring contract: the model classifies, a
@@ -71,18 +71,18 @@ export default function CaseStudyPage() {
           </p>
           <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-3 text-sm">
             <div>
-              <dt className="text-zinc-500">Role</dt>
-              <dd className="mt-1 text-zinc-200">Solo — design, engineering, documentation.</dd>
+              <dt className="text-foreground-subtle">Role</dt>
+              <dd className="mt-1 text-foreground">Solo — design, engineering, documentation.</dd>
             </div>
             <div>
-              <dt className="text-zinc-500">Stack</dt>
-              <dd className="mt-1 text-zinc-200">
+              <dt className="text-foreground-subtle">Stack</dt>
+              <dd className="mt-1 text-foreground">
                 Next.js 15 · Supabase · Groq / Gemini · Resend · Vercel.
               </dd>
             </div>
             <div>
-              <dt className="text-zinc-500">Timeline</dt>
-              <dd className="mt-1 text-zinc-200">Built over 2 days.</dd>
+              <dt className="text-foreground-subtle">Timeline</dt>
+              <dd className="mt-1 text-foreground">Built over 2 days.</dd>
             </div>
           </dl>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -102,7 +102,7 @@ export default function CaseStudyPage() {
                 size: 'lg',
                 variant: 'outline',
                 className:
-                  'border-zinc-700 bg-transparent text-zinc-100 hover:bg-zinc-800 hover:text-white',
+                  'border-border-strong bg-transparent text-foreground hover:bg-surface-hover hover:text-foreground',
               })}
             >
               View source
@@ -112,24 +112,24 @@ export default function CaseStudyPage() {
             <Image
               src="/case-study/overview.png"
               alt="Relay admin pipeline overview with stats and score distribution"
-              width={813}
-              height={262}
+              width={1654}
+              height={1434}
               sizes="100vw"
-              className="w-full rounded-xl border border-zinc-800 shadow-2xl"
+              className="w-full rounded-xl border border-border shadow-elevated"
             />
-            <figcaption className="mt-3 text-center text-sm text-zinc-500">
+            <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
               The pipeline at a glance — every lead scored, routed, and reviewable.
             </figcaption>
           </figure>
         </section>
 
         {/* 1. Problem */}
-        <section className="border-t border-zinc-800 py-16 md:py-20">
-          <p className="text-sm font-medium tracking-wide text-indigo-400">01 — The problem</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white md:text-3xl">
+        <section className="border-t border-border py-16 md:py-20">
+          <p className="text-sm font-medium tracking-wide text-accent">01 — The problem</p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             Small sales teams drown in inbound they can&apos;t triage
           </h2>
-          <div className="mt-6 flex max-w-[70ch] flex-col gap-5 text-base leading-relaxed text-zinc-400">
+          <div className="mt-6 flex max-w-[70ch] flex-col gap-5 text-base leading-relaxed text-foreground-muted">
             <p>
               A five-person B2B sales team gets a few dozen inbound messages a
               week: demo requests next to job seekers next to SEO cold pitches.
@@ -157,12 +157,12 @@ export default function CaseStudyPage() {
         </section>
 
         {/* 2. How it works */}
-        <section className="border-t border-zinc-800 py-16 md:py-20">
-          <p className="text-sm font-medium tracking-wide text-indigo-400">02 — How it works</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white md:text-3xl">
+        <section className="border-t border-border py-16 md:py-20">
+          <p className="text-sm font-medium tracking-wide text-accent">02 — How it works</p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             One form fill, eight steps, three seconds
           </h2>
-          <p className="mt-6 max-w-[70ch] text-base leading-relaxed text-zinc-400">
+          <p className="mt-6 max-w-[70ch] text-base leading-relaxed text-foreground-muted">
             The request path does the minimum — validate, insert, return a
             reference code — and everything expensive happens after the
             response is already on its way back. The admin dashboard reads the
@@ -171,11 +171,11 @@ export default function CaseStudyPage() {
           <div className="mt-8 flex flex-wrap items-center gap-2">
             {FLOW.map((step, i) => (
               <span key={step} className="flex items-center gap-2">
-                <span className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-xs text-zinc-200">
+                <span className="rounded-lg border border-border-strong bg-surface px-3 py-2 font-mono text-xs text-foreground">
                   {step}
                 </span>
                 {i < FLOW.length - 1 ? (
-                  <span className="text-indigo-400">→</span>
+                  <span className="text-accent">→</span>
                 ) : null}
               </span>
             ))}
@@ -187,31 +187,31 @@ export default function CaseStudyPage() {
               width={1654}
               height={1072}
               sizes="100vw"
-              className="w-full rounded-xl border border-zinc-800 shadow-2xl"
+              className="w-full rounded-xl border border-border shadow-elevated"
             />
-            <figcaption className="mt-3 text-center text-sm text-zinc-500">
+            <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
               Every lead, filterable and sortable.
             </figcaption>
           </figure>
         </section>
 
         {/* 3. Technical decisions */}
-        <section className="border-t border-zinc-800 py-16 md:py-20">
-          <p className="text-sm font-medium tracking-wide text-indigo-400">03 — Technical decisions</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white md:text-3xl">
+        <section className="border-t border-border py-16 md:py-20">
+          <p className="text-sm font-medium tracking-wide text-accent">03 — Technical decisions</p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             Six calls I&apos;d defend in an interview
           </h2>
           <div className="mt-8 flex flex-col gap-10">
             {DECISIONS.map((d, i) => (
               <div key={d.title}>
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold text-foreground">
                   {d.title}
                 </h3>
-                <p className="mt-2 max-w-[70ch] text-base leading-relaxed text-zinc-400">
+                <p className="mt-2 max-w-[70ch] text-base leading-relaxed text-foreground-muted">
                   {d.body}
                 </p>
                 {d.code ? (
-                  <pre className="mt-3 max-w-[70ch] overflow-x-auto rounded-lg bg-zinc-900 px-4 py-3 font-mono text-xs leading-relaxed text-zinc-300">
+                  <pre className="mt-3 max-w-[70ch] overflow-x-auto rounded-lg bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-foreground">
                     {d.code}
                   </pre>
                 ) : null}
@@ -220,12 +220,12 @@ export default function CaseStudyPage() {
                     <Image
                       src="/case-study/breakdown.png"
                       alt="Score breakdown panel showing sub-scores and weights"
-                      width={1654}
-                      height={1381}
+                      width={813}
+                      height={262}
                       sizes="(max-width: 768px) 100vw, 448px"
-                      className="w-full rounded-xl border border-zinc-800 shadow-2xl"
+                      className="w-full rounded-xl border border-border shadow-elevated"
                     />
-                    <figcaption className="mt-3 text-center text-sm text-zinc-500">
+                    <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
                       Sub-scores and weights, rendered straight from the DB. No
                       client-side recomputation.
                     </figcaption>
@@ -238,24 +238,24 @@ export default function CaseStudyPage() {
             <Image
               src="/case-study/detail.png"
               alt="Full lead detail page with AI summary, extraction, routing, and timeline"
-              width={1215}
+              width={1669}
               height={911}
               sizes="100vw"
-              className="w-full rounded-xl border border-zinc-800 shadow-2xl"
+              className="w-full rounded-xl border border-border shadow-elevated"
             />
-            <figcaption className="mt-3 text-center text-sm text-zinc-500">
+            <figcaption className="mt-3 text-center text-sm text-foreground-subtle">
               Full lead detail — AI summary, extraction, routing, timeline.
             </figcaption>
           </figure>
         </section>
 
         {/* 4. Differently */}
-        <section className="border-t border-zinc-800 py-16 md:py-20">
-          <p className="text-sm font-medium tracking-wide text-indigo-400">04 — What I&apos;d do differently</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white md:text-3xl">
+        <section className="border-t border-border py-16 md:py-20">
+          <p className="text-sm font-medium tracking-wide text-accent">04 — What I&apos;d do differently</p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             Three honest limitations
           </h2>
-          <ul className="mt-6 flex max-w-[70ch] list-disc flex-col gap-4 pl-5 text-base leading-relaxed text-zinc-400">
+          <ul className="mt-6 flex max-w-[70ch] list-disc flex-col gap-4 pl-5 text-base leading-relaxed text-foreground-muted">
             <li>
               The rate limit is a single-instance in-memory Map. Fine for a
               demo, resets on cold start. Upstash Redis + sliding window is
@@ -274,9 +274,9 @@ export default function CaseStudyPage() {
         </section>
 
         {/* 5. Under the hood */}
-        <section className="border-t border-zinc-800 py-16 md:py-20">
-          <p className="text-sm font-medium tracking-wide text-indigo-400">05 — Under the hood</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white md:text-3xl">
+        <section className="border-t border-border py-16 md:py-20">
+          <p className="text-sm font-medium tracking-wide text-accent">05 — Under the hood</p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             The receipts
           </h2>
           <dl className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -288,14 +288,14 @@ export default function CaseStudyPage() {
             ].map(([k, v]) => (
               <div
                 key={k}
-                className="rounded-xl border border-zinc-800 bg-zinc-900 p-5"
+                className="rounded-xl border border-border bg-surface p-5"
               >
-                <dt className="text-lg font-semibold text-white">{k}</dt>
-                <dd className="mt-1 text-sm text-zinc-400">{v}</dd>
+                <dt className="text-lg font-semibold text-foreground">{k}</dt>
+                <dd className="mt-1 text-sm text-foreground-muted">{v}</dd>
               </div>
             ))}
           </dl>
-          <p className="mt-6 max-w-[70ch] text-base leading-relaxed text-zinc-400">
+          <p className="mt-6 max-w-[70ch] text-base leading-relaxed text-foreground-muted">
             Groq gpt-oss-120b primary, Gemini 3.1-flash-lite fallback. Supabase,
             Groq, Gemini, Vercel, Resend, and GitHub all on free tiers — the
             only bill for this project is $0.
@@ -303,14 +303,14 @@ export default function CaseStudyPage() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-800 py-10 text-sm text-zinc-500">
+        <footer className="border-t border-border py-10 text-sm text-foreground-subtle">
           <p>
             Built by{' '}
             <a
               href="https://github.com/darvinraj400-ux"
               target="_blank"
               rel="noreferrer"
-              className="text-zinc-200 underline-offset-4 hover:underline"
+              className="text-foreground underline-offset-4 hover:underline"
             >
               Darvin Raj
             </a>

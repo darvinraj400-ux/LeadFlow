@@ -45,66 +45,93 @@ const STEPS = [
   },
 ];
 
+const BENTO = [
+  {
+    eyebrow: 'Signal',
+    title: 'AI classifies, code scores.',
+    body: 'The AI returns discrete categories. A pure function maps them to points with fixed weights. Every score is deterministic given the extraction.',
+    span: true,
+  },
+  {
+    eyebrow: 'Audit',
+    title: 'Sub-scores you can audit.',
+    body: 'Company fit, industry fit, intent clarity, budget signal — each weighted, each visible in the admin.',
+    span: false,
+  },
+  {
+    eyebrow: 'Route',
+    title: 'Routing that reflects intent.',
+    body: '70+ auto-reply. 30–69 queued for review. Below 30 archived. No black box.',
+    span: false,
+  },
+  {
+    eyebrow: 'Trace',
+    title: 'Every decision logged.',
+    body: 'Timestamped, reviewed, and traceable from lead to action.',
+    span: false,
+  },
+];
+
 export default function MarketingHomePage() {
   return (
-    <div className="min-h-full bg-zinc-950 text-zinc-50">
-      <header className="sticky top-0 z-10 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur">
+    <div className="min-h-full bg-background font-sans leading-[1.65] text-foreground">
+      <header className="sticky top-0 z-10 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-          <span className="text-lg font-semibold tracking-tight">Relay</span>
-          <nav className="hidden items-center gap-8 text-sm text-zinc-400 md:flex">
-            <Link href="#features" className="hover:text-zinc-100">
+          <span className="font-display text-lg font-semibold tracking-tight">Relay</span>
+          <nav className="hidden items-center gap-8 text-sm text-foreground-muted md:flex">
+            <Link href="#features" className="hover:text-foreground">
               Product
             </Link>
-            <Link href="#how" className="hover:text-zinc-100">
+            <Link href="#how" className="hover:text-foreground">
               How it works
             </Link>
-            <Link href="/case-study" className="hover:text-zinc-100">
+            <Link href="/case-study" className="hover:text-foreground">
               Docs
             </Link>
           </nav>
           <Link
             href="#demo"
-            className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-400"
+            className="rounded-[8px] bg-accent px-4 py-2 text-sm font-medium text-accent-foreground shadow-glow hover:brightness-110"
           >
             Book a demo
           </Link>
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 py-16 md:py-24">
-        <section className="flex flex-col items-center gap-6 text-center">
-          <p className="rounded-full border border-zinc-800 bg-zinc-900 px-3 py-1 text-xs text-zinc-400">
+      <main className="mx-auto flex w-full max-w-6xl flex-col px-6">
+        <section className="flex flex-col items-center gap-6 py-[var(--space-section-y)] text-center">
+          <p className="rounded-full border border-border bg-surface px-3 py-1 font-mono text-xs text-foreground-muted">
             Relay — a fictional CRM product
           </p>
-          <h1 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
+          <h1 className="max-w-3xl font-display text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-[0.95] tracking-[-0.035em]">
             Inbound that routes itself.
           </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-zinc-400 md:text-lg">
+          <p className="max-w-2xl text-base leading-relaxed text-foreground-muted md:text-lg">
             Relay qualifies, scores, and routes every inbound lead — so your
             team only sees the ones worth their time.
           </p>
           <Link
             href="#demo"
-            className="inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-400"
+            className="inline-flex items-center gap-2 rounded-[8px] bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground shadow-glow hover:brightness-110"
           >
             Try the live demo <ArrowRight className="h-4 w-4" />
           </Link>
         </section>
 
-        <section id="demo" className="grid gap-8 md:grid-cols-5">
+        <section id="demo" className="grid gap-8 py-[var(--space-section-y)] md:grid-cols-5">
           <div className="flex flex-col gap-6 md:col-span-3">
-            <h2 className="text-2xl font-semibold tracking-tight">
+            <h2 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-[-0.02em]">
               What Relay does with one form fill
             </h2>
             <ul className="flex flex-col gap-5">
               {FEATURES.map((f) => (
                 <li key={f.title} className="flex gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900">
-                    <f.icon className="h-5 w-5 text-indigo-400" />
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface">
+                    <f.icon className="h-5 w-5 text-accent" />
                   </span>
                   <span>
                     <span className="block font-medium">{f.title}</span>
-                    <span className="block text-sm leading-relaxed text-zinc-400">
+                    <span className="block text-sm leading-relaxed text-foreground-muted">
                       {f.body}
                     </span>
                   </span>
@@ -113,8 +140,8 @@ export default function MarketingHomePage() {
             </ul>
           </div>
           <div className="md:col-span-2">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-              <p className="mb-4 text-sm font-medium text-zinc-300">
+            <div className="rounded-lg border border-border bg-surface p-6 shadow-card">
+              <p className="mb-4 font-mono text-xs uppercase tracking-[0.12em] text-accent">
                 Get a demo — this form is live
               </p>
               <LeadForm />
@@ -122,41 +149,45 @@ export default function MarketingHomePage() {
           </div>
         </section>
 
-        <section id="features" className="grid gap-4 md:grid-cols-3">
-          {FEATURES.map((f) => (
+        <section id="features" className="grid grid-cols-1 gap-4 py-[var(--space-section-y)] md:grid-cols-3 md:grid-rows-2">
+          {BENTO.map((cell, i) => (
             <div
-              key={f.title}
-              className="flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900 p-6"
+              key={cell.title}
+              className={`flex flex-col gap-3 rounded-lg border border-border bg-surface p-6 shadow-card ${
+                cell.span || i === BENTO.length - 1 ? 'md:col-span-2' : ''
+              }`}
             >
-              <f.icon className="h-6 w-6 text-indigo-400" />
-              <h3 className="font-semibold">{f.title}</h3>
-              <p className="text-sm leading-relaxed text-zinc-400">{f.body}</p>
+              <span className="eyebrow">{cell.eyebrow}</span>
+              <h3 className="font-display text-xl font-semibold tracking-[-0.02em]">
+                {cell.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-foreground-muted">{cell.body}</p>
             </div>
           ))}
         </section>
 
-        <section id="how" className="flex flex-col gap-8">
-          <h2 className="text-center text-2xl font-semibold tracking-tight">
+        <section id="how" className="flex flex-col gap-8 py-[var(--space-section-y)]">
+          <h2 className="text-center font-display text-[clamp(1.75rem,3vw,2.5rem)] font-semibold tracking-[-0.02em]">
             How it works
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             {STEPS.map((s) => (
               <div
                 key={s.n}
-                className="flex flex-col gap-2 rounded-2xl border border-zinc-800 bg-zinc-900 p-6"
+                className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-6 shadow-card"
               >
-                <span className="font-mono text-sm text-indigo-400">{s.n}</span>
+                <span className="font-mono text-sm text-accent">{s.n}</span>
                 <h3 className="font-semibold">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-zinc-400">{s.body}</p>
+                <p className="text-sm leading-relaxed text-foreground-muted">{s.body}</p>
               </div>
             ))}
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-zinc-800">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-8 text-xs text-zinc-500">
-          <span className="text-sm font-semibold text-zinc-300">Relay</span>
+      <footer className="border-t border-border">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-8 font-mono text-xs text-foreground-muted">
+          <span className="font-display text-sm font-semibold text-foreground">Relay</span>
           <span>
             Relay is a fictional product built as a portfolio piece. Demo
             submissions are stored and scored for illustration.

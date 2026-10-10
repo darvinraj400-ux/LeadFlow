@@ -12,10 +12,10 @@ export function SuccessState({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-lg font-semibold text-zinc-50">Thanks, {name}.</p>
-      <p className="text-sm leading-relaxed text-zinc-400">
+      <p className="text-lg font-semibold text-foreground">Thanks, {name}.</p>
+      <p className="text-sm leading-relaxed text-foreground-muted">
         Your reference number is{' '}
-        <span className="font-mono font-medium text-zinc-100">{referenceCode}</span>.
+        <span className="font-mono font-medium text-foreground">{referenceCode}</span>.
         <br />
         We&apos;ll be in touch within one business day.
       </p>
