@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { createAdminClient } from '@/lib/supabase';
 import { formatDateTime, scoreColorClass } from '@/lib/format';
 import { IntentBadge, RoutingBadge, StatusBadge } from '@/components/admin/StatusBadge';
-import { ScoreBreakdown } from '@/components/admin/ScoreBreakdown';
+import { ScoreReveal } from '@/components/admin/ScoreReveal';
 import { LeadActions } from '@/components/admin/LeadActions';
 import { cn } from '@/lib/utils';
 import type { Lead } from '@/lib/leads/types';
@@ -13,8 +13,8 @@ function TimelineRow({ label, value }: { label: string; value: string | null }) 
   if (!value) return null;
   return (
     <div className="flex items-center justify-between gap-4 text-sm">
-      <span className="text-zinc-500">{label}</span>
-      <span className="text-zinc-300">{formatDateTime(value)}</span>
+      <span className="text-foreground-subtle">{label}</span>
+      <span className="text-foreground">{formatDateTime(value)}</span>
     </div>
   );
 }
@@ -48,22 +48,22 @@ export default async function AdminLeadDetailPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="font-mono text-lg text-zinc-400">{lead.reference_code}</h1>
+      <h1 className="font-mono text-lg text-foreground-muted">{lead.reference_code}</h1>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-6 lg:col-span-2">
-          <Card className="border-zinc-800 bg-zinc-900">
+          <Card className="glass-score rounded-lg">
             <CardContent className="flex flex-col gap-4 pt-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <p className="text-xl font-semibold text-white">{lead.name}</p>
-                  <p className="text-sm text-zinc-400">{lead.email}</p>
+                  <p className="text-xl font-semibold text-foreground">{lead.name}</p>
+                  <p className="text-sm text-foreground-muted">{lead.email}</p>
                   {[lead.company, lead.role].filter(Boolean).length > 0 ? (
-                    <p className="mt-1 text-sm text-zinc-500">
+                    <p className="mt-1 text-sm text-foreground-subtle">
                       {[lead.company, lead.role].filter(Boolean).join(' · ')}
                     </p>
                   ) : null}
-                  <p className="mt-1 text-xs text-zinc-500">
+                  <p className="mt-1 text-xs text-foreground-subtle">
                     Submitted {formatDateTime(lead.created_at)}
                   </p>
                 </div>
@@ -71,24 +71,24 @@ export default async function AdminLeadDetailPage({
                   <StatusBadge status={lead.status} />
                   <p className={cn('font-mono text-5xl font-bold', scoreColorClass(lead.score_total))}>
                     {lead.score_total ?? '—'}
-                    <span className="text-lg text-zinc-500">/100</span>
+                    <span className="text-lg text-foreground-subtle">/100</span>
                   </p>
                 </div>
               </div>
               {lead.ai_summary ? (
-                <p className="border-t border-zinc-800 pt-4 text-sm leading-relaxed text-zinc-300">
+                <p className="border-t border-border pt-4 text-sm leading-relaxed text-foreground">
                   {lead.ai_summary}
                 </p>
               ) : null}
             </CardContent>
           </Card>
 
-          <Card className="border-zinc-800 bg-zinc-900">
+          <Card className="border-border bg-surface rounded-lg shadow-card">
             <CardHeader>
-              <CardTitle className="text-white">Score breakdown</CardTitle>
+              <CardTitle className="font-display text-foreground">Score breakdown</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScoreBreakdown
+              <ScoreReveal
                 company_fit={lead.score_company_fit}
                 industry_fit={lead.score_industry_fit}
                 intent_clarity={lead.score_intent_clarity}
@@ -98,34 +98,34 @@ export default async function AdminLeadDetailPage({
             </CardContent>
           </Card>
 
-          <Card className="border-zinc-800 bg-zinc-900">
+          <Card className="border-border bg-surface rounded-lg shadow-card">
             <CardHeader>
-              <CardTitle className="text-white">Message</CardTitle>
+              <CardTitle className="font-display text-foreground">Message</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
-              <blockquote className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-sm leading-relaxed text-zinc-300">
+              <blockquote className="rounded-lg border border-border bg-background p-4 text-sm leading-relaxed text-foreground">
                 {lead.message}
               </blockquote>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-foreground-subtle">
                 Submitted by {lead.name} &lt;{lead.email}&gt;
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-zinc-800 bg-zinc-900">
+          <Card className="border-border bg-surface rounded-lg shadow-card">
             <CardHeader>
-              <CardTitle className="text-white">AI extraction</CardTitle>
+              <CardTitle className="font-display text-foreground">AI extraction</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
                 {extractionRows.map(([k, v]) => (
                   <div key={k} className="flex items-center justify-between gap-4 text-sm">
-                    <dt className="text-zinc-500">{k}</dt>
-                    <dd className="font-mono text-xs text-zinc-200">{v ?? '—'}</dd>
+                    <dt className="text-foreground-subtle">{k}</dt>
+                    <dd className="font-mono text-xs text-foreground">{v ?? '—'}</dd>
                   </div>
                 ))}
                 <div className="flex items-center justify-between gap-4 text-sm">
-                  <dt className="text-zinc-500">Intent</dt>
+                  <dt className="text-foreground-subtle">Intent</dt>
                   <dd>
                     <IntentBadge intent={lead.ai_intent} />
                   </dd>
@@ -137,7 +137,7 @@ export default async function AdminLeadDetailPage({
                     <Badge
                       key={t}
                       variant="outline"
-                      className="border-zinc-700 font-mono text-[11px] text-zinc-300"
+                      className="border-border-strong font-mono text-[11px] text-foreground"
                     >
                       {t}
                     </Badge>
@@ -148,38 +148,38 @@ export default async function AdminLeadDetailPage({
           </Card>
         </div>
 
-        <div className="flex flex-col gap-6">
-          <Card className="border-zinc-800 bg-zinc-900">
+    <div className="flex flex-col gap-6">
+          <Card className="border-border bg-surface rounded-lg shadow-card">
             <CardHeader>
-              <CardTitle className="text-white">Routing</CardTitle>
+              <CardTitle className="font-display text-foreground">Routing</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-500">Status</span>
+                <span className="text-foreground-subtle">Status</span>
                 <StatusBadge status={lead.status} />
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-500">Decision</span>
+                <span className="text-foreground-subtle">Decision</span>
                 <RoutingBadge decision={lead.routing_decision} />
               </div>
-              <p className="border-t border-zinc-800 pt-3 text-xs text-zinc-500">
+              <p className="border-t border-border pt-3 text-xs text-foreground-subtle">
                 {routingNote}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-zinc-800 bg-zinc-900">
+          <Card className="border-border bg-surface rounded-lg shadow-card">
             <CardHeader>
-              <CardTitle className="text-white">Actions</CardTitle>
+              <CardTitle className="font-display text-foreground">Actions</CardTitle>
             </CardHeader>
             <CardContent>
               <LeadActions leadId={lead.id} currentStatus={lead.status} />
             </CardContent>
           </Card>
 
-          <Card className="border-zinc-800 bg-zinc-900">
+          <Card className="border-border bg-surface rounded-lg shadow-card">
             <CardHeader>
-              <CardTitle className="text-white">Timeline</CardTitle>
+              <CardTitle className="font-display text-foreground">Timeline</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               <TimelineRow label="Created" value={lead.created_at} />
@@ -190,7 +190,7 @@ export default async function AdminLeadDetailPage({
               <TimelineRow label="Sales notified" value={lead.sales_notified_at} />
               <TimelineRow label="Reviewed" value={lead.reviewed_at} />
               {lead.ai_status !== 'enriched' ? (
-                <p className="text-xs text-zinc-500">AI status: {lead.ai_status}</p>
+                <p className="text-xs text-foreground-subtle">AI status: {lead.ai_status}</p>
               ) : null}
             </CardContent>
           </Card>

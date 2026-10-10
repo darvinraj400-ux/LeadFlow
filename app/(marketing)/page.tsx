@@ -80,7 +80,7 @@ const BENTO = [
 export default function MarketingHomePage() {
   return (
     <div className="min-h-full bg-background font-sans leading-[1.65] text-foreground">
-      <header className="sticky top-0 z-10 border-b border-border bg-background/90 backdrop-blur">
+      <header className="glass-nav sticky top-0 z-10">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
           <span className="font-display text-lg font-semibold tracking-tight">Relay</span>
           <nav className="hidden items-center gap-8 text-sm text-foreground-muted md:flex">

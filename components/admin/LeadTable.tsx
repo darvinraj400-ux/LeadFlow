@@ -39,8 +39,8 @@ function SortHead({
   params.set('dir', nextDir);
   const href = `/admin/leads?${params.toString()}`;
   return (
-    <TableHead className={cn('text-zinc-400', className)}>
-      <Link href={href} className="inline-flex items-center gap-1 hover:text-zinc-100">
+    <TableHead className={cn('text-foreground-muted', className)}>
+      <Link href={href} className="inline-flex items-center gap-1 hover:text-foreground">
         {label}
         <span className="text-xs">{active ? (dir === 'desc' ? '▼' : '▲') : ''}</span>
       </Link>
@@ -60,13 +60,13 @@ export function LeadTable({
   status: string | null;
 }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-zinc-800">
+    <div className="overflow-x-auto rounded-lg border border-border shadow-card">
       <Table>
         <TableHeader>
-          <TableRow className="border-zinc-800">
-            <TableHead className="text-zinc-400">Reference</TableHead>
-            <TableHead className="text-zinc-400">Name / Email</TableHead>
-            <TableHead className="text-zinc-400">Company</TableHead>
+          <TableRow className="border-border">
+            <TableHead className="text-foreground-muted">Reference</TableHead>
+            <TableHead className="text-foreground-muted">Name / Email</TableHead>
+            <TableHead className="text-foreground-muted">Company</TableHead>
             <SortHead
               label="Score"
               column="score"
@@ -75,8 +75,8 @@ export function LeadTable({
               status={status}
               className="text-right"
             />
-            <TableHead className="text-zinc-400">Intent</TableHead>
-            <TableHead className="text-zinc-400">Status</TableHead>
+            <TableHead className="text-foreground-muted">Intent</TableHead>
+            <TableHead className="text-foreground-muted">Status</TableHead>
             <SortHead
               label="Created"
               column="created_at"
@@ -84,20 +84,20 @@ export function LeadTable({
               dir={dir}
               status={status}
             />
-            <TableHead className="text-zinc-400">Actions</TableHead>
+            <TableHead className="text-foreground-muted">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {leads.map((l) => (
-            <TableRow key={l.id} className="border-zinc-800">
-              <TableCell className="font-mono text-xs text-zinc-400">
+            <TableRow key={l.id} className="border-border">
+              <TableCell className="font-mono text-xs text-foreground-muted">
                 {l.reference_code}
               </TableCell>
               <TableCell>
-                <span className="block text-sm text-zinc-200">{l.name}</span>
-                <span className="block text-xs text-zinc-500">{l.email}</span>
+                <span className="block text-sm text-foreground">{l.name}</span>
+                <span className="block font-mono text-xs text-foreground-muted">{l.email}</span>
               </TableCell>
-              <TableCell className="text-sm text-zinc-300">
+              <TableCell className="text-sm text-foreground">
                 {l.company ?? '—'}
               </TableCell>
               <TableCell
@@ -114,13 +114,13 @@ export function LeadTable({
               <TableCell>
                 <StatusBadge status={l.status} />
               </TableCell>
-              <TableCell className="whitespace-nowrap text-xs text-zinc-400">
+              <TableCell className="whitespace-nowrap font-mono text-xs text-foreground-muted">
                 {timeAgo(l.created_at)}
               </TableCell>
               <TableCell>
                 <Link
                   href={`/admin/leads/${l.id}`}
-                  className="text-sm text-indigo-400 underline-offset-4 hover:underline"
+                  className="text-sm text-accent underline-offset-4 hover:underline"
                 >
                   View
                 </Link>

@@ -59,8 +59,8 @@ export function LeadActions({
             disabled={current || busy !== null}
             onClick={() => act(a.status)}
             className={cn(
-              'justify-start border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white',
-              current && 'border-indigo-500/50 text-indigo-300',
+              'justify-start rounded-[8px] border-border-strong text-foreground-muted hover:bg-surface-hover hover:text-foreground',
+              current && 'border-accent/50 text-accent',
             )}
           >
             {loading ? 'Saving…' : current ? `✓ ${a.label}` : a.label}

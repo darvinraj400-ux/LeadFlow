@@ -25,7 +25,7 @@ export function LogoutButton() {
       size="sm"
       onClick={logout}
       disabled={busy}
-      className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-white"
+      className="rounded-[8px] border-border-strong bg-transparent text-foreground-muted hover:bg-surface-hover hover:text-foreground"
     >
       Logout
     </Button>

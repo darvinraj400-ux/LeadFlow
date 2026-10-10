@@ -69,7 +69,7 @@ export default async function AdminLeadsPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight text-white">Leads</h1>
+      <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground">Leads</h1>
 
       <div className="flex flex-wrap gap-2">
         {TABS.map((t) => {
@@ -80,10 +80,10 @@ export default async function AdminLeadsPage({
               key={t.label}
               href={href(base, { status: t.value ?? undefined, page: undefined })}
               className={cn(
-                'rounded-lg border px-3 py-1.5 text-sm',
+                'rounded-[8px] border px-3 py-1.5 text-sm',
                 active
-                  ? 'border-indigo-500 bg-indigo-500/15 text-indigo-200'
-                  : 'border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200',
+                  ? 'border-accent bg-accent-glow text-accent'
+                  : 'border-border text-foreground-muted hover:border-border-strong hover:text-foreground',
               )}
             >
               {t.label}
@@ -93,7 +93,7 @@ export default async function AdminLeadsPage({
       </div>
 
       {leads.length === 0 ? (
-        <p className="rounded-xl border border-zinc-800 px-4 py-8 text-center text-sm text-zinc-400">
+        <p className="rounded-lg border border-border px-4 py-8 text-center text-sm text-foreground-muted">
           No leads matching this filter.
         </p>
       ) : (
@@ -104,7 +104,7 @@ export default async function AdminLeadsPage({
             dir={dir}
             status={statusFilter}
           />
-          <div className="flex items-center justify-between text-sm text-zinc-400">
+          <div className="flex items-center justify-between font-mono text-xs text-foreground-muted">
             <span>
               Page {page} of {pageCount} · {total} lead{total === 1 ? '' : 's'}
             </span>
@@ -112,7 +112,7 @@ export default async function AdminLeadsPage({
               {page > 1 ? (
                 <Link
                   href={href(base, { page: String(page - 1) })}
-                  className="rounded-lg border border-zinc-800 px-3 py-1.5 hover:border-zinc-700 hover:text-zinc-200"
+                  className="rounded-[8px] border border-border px-3 py-1.5 hover:border-border-strong hover:text-foreground"
                 >
                   ← Prev
                 </Link>
@@ -120,7 +120,7 @@ export default async function AdminLeadsPage({
               {page < pageCount ? (
                 <Link
                   href={href(base, { page: String(page + 1) })}
-                  className="rounded-lg border border-zinc-800 px-3 py-1.5 hover:border-zinc-700 hover:text-zinc-200"
+                  className="rounded-[8px] border border-border px-3 py-1.5 hover:border-border-strong hover:text-foreground"
                 >
                   Next →
                 </Link>

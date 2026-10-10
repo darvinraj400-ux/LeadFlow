@@ -227,6 +227,41 @@
   .animate-drift-c {
     animation: signal-drift-c 40s ease-in-out infinite;
   }
+
+  /* Glass — sticky navs, score/detail cards, overview stats.
+     Kept narrow on purpose. */
+  .glass-nav {
+    background: rgba(8, 9, 11, 0.72);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .glass-score {
+    background: linear-gradient(
+      135deg,
+      rgba(21, 24, 29, 0.85),
+      rgba(15, 17, 20, 0.85)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(34, 211, 238, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  /* Custom cursor takes over: hide native except where a caret is needed. */
+  body.cursor-custom,
+  body.cursor-custom a,
+  body.cursor-custom button,
+  body.cursor-custom [role='button'] {
+    cursor: none;
+  }
+  body.cursor-custom input,
+  body.cursor-custom textarea {
+    cursor: text;
+  }
+  body.cursor-custom select {
+    cursor: default;
+  }
 }
 
 @keyframes signal-drift-a {
@@ -271,5 +306,30 @@
   .animate-drift-b,
   .animate-drift-c {
     animation: none;
+  }
+}
+
+/* View Transitions API: cross-fade + 8px vertical offset (320ms total).
+   Only takes effect when JS wraps a navigation in startViewTransition. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: vt-page-out 160ms ease-out both;
+  }
+  ::view-transition-new(root) {
+    animation: vt-page-in 160ms ease-out both;
+  }
+}
+
+@keyframes vt-page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes vt-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }

@@ -23,7 +23,7 @@ export function formatDateTime(iso: string): string {
 
 // Score text color: green ≥70, amber 30-69, red <30.
 export function scoreColorClass(total: number | null): string {
-  if (total === null) return 'text-zinc-500';
+  if (total === null) return 'text-foreground-subtle';
   if (total >= 70) return 'text-green-400';
   if (total >= 30) return 'text-amber-400';
   return 'text-red-400';

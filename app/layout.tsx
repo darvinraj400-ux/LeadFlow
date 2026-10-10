@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { CustomCursor } from "@/components/marketing/CustomCursor";
+import { RouteTransition } from "@/components/RouteTransition";
 import "./globals.css";
 
 const inter = Inter({
@@ -59,6 +61,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${display.variable} ${mono.variable} h-full antialiased`}
     >
       <body className={`${inter.className} min-h-full flex flex-col`}>
+        <CustomCursor />
+        <RouteTransition />
         <noscript>
           <style>{'.reveal{opacity:1 !important;transform:none !important;visibility:visible !important;}'}</style>
         </noscript>

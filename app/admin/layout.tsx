@@ -10,21 +10,21 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <header className="border-b border-zinc-800">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="glass-nav sticky top-0 z-10">
         <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between px-6">
           <div className="flex items-center gap-8">
             <Link
               href="/admin"
-              className="text-sm font-semibold tracking-tight text-white"
+              className="font-display text-sm font-semibold tracking-tight"
             >
               Relay Admin
             </Link>
-            <nav className="flex items-center gap-5 text-sm text-zinc-400">
-              <Link href="/admin" className="hover:text-white">
+            <nav className="flex items-center gap-5 text-sm text-foreground-muted">
+              <Link href="/admin" className="hover:text-foreground">
                 Overview
               </Link>
-              <Link href="/admin/leads" className="hover:text-white">
+              <Link href="/admin/leads" className="hover:text-foreground">
                 Leads
               </Link>
             </nav>

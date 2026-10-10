@@ -55,7 +55,7 @@ Reverse-chronological. One section per completed layer.
   queued / archived), CSS-only 5-bucket score bars, last-8 table.
 - Leads table: server-side status tabs, allowlisted sort (score /
   created_at), 50/page offset pagination with preserved query strings.
-- Detail is the hero: DB-read sub-scores in `ScoreBreakdown` bars
+- Detail is the hero: DB-read sub-scores in `ScoreReveal` bars
   (`grid-cols-[120px_1fr_80px]`, never recomputed), routing + actions
   (PATCH, `reviewed_at` on contacted/replied/qualified) + timeline.
 - Smoke-verified live (10 checks): unauth 307→login, 401 on wrong pw,

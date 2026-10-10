@@ -38,14 +38,14 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <Card className="w-full max-w-sm border-zinc-800 bg-zinc-900">
+      <Card className="w-full max-w-sm border-border bg-surface rounded-lg shadow-card">
         <CardHeader>
-          <CardTitle className="text-white">Admin login</CardTitle>
+          <CardTitle className="font-display text-foreground">Admin login</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="admin-password" className="text-zinc-300">
+              <Label htmlFor="admin-password" className="text-foreground">
                 Password
               </Label>
               <Input
@@ -56,13 +56,13 @@ export default function AdminLoginPage() {
                 disabled={busy}
                 autoComplete="current-password"
                 autoFocus
-                className="border-zinc-700 bg-zinc-950 text-zinc-100"
+                className="border-border bg-background text-foreground"
               />
             </div>
             <Button
               type="submit"
               disabled={busy || !password}
-              className="bg-indigo-500 text-white hover:bg-indigo-400"
+              className="rounded-[8px] bg-accent text-accent-foreground hover:brightness-110"
             >
               {busy ? 'Checking…' : 'Log in'}
             </Button>

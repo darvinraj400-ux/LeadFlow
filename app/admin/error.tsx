@@ -18,14 +18,14 @@ export default function AdminError({
   return (
     <div className="flex min-h-[50vh] flex-col items-start justify-center gap-3">
       <h2 className="text-xl font-semibold text-white">Something went wrong.</h2>
-      <p className="max-w-[60ch] text-sm leading-relaxed text-zinc-400">
+      <p className="max-w-[60ch] text-sm leading-relaxed text-foreground-muted">
         The admin panel hit an unexpected error. Reloading usually fixes it —
         your data is safe.
       </p>
       <button
         type="button"
         onClick={reset}
-        className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+        className="rounded-[8px] bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         Try again
       </button>

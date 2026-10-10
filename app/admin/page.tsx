@@ -72,23 +72,23 @@ export default async function AdminOverviewPage() {
     <div className="flex flex-col gap-8">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
-          <Card key={s.label} className="border-zinc-800 bg-zinc-900">
+          <Card key={s.label} className="glass-score rounded-lg">
             <CardHeader className="flex flex-row items-center justify-between pb-1">
-              <CardTitle className="text-sm font-medium text-zinc-400">
+              <CardTitle className="text-sm font-medium text-foreground-muted">
                 {s.label}
               </CardTitle>
-              <s.icon className="h-4 w-4 text-zinc-500" />
+              <s.icon className="h-4 w-4 text-foreground-subtle" />
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-semibold text-white">{s.value}</p>
+              <p className="font-mono text-3xl font-semibold tabular-nums text-foreground">{s.value}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <Card className="border-zinc-800 bg-zinc-900">
+      <Card className="border-border bg-surface rounded-lg shadow-card">
         <CardHeader>
-          <CardTitle className="text-white">Score distribution</CardTitle>
+          <CardTitle className="font-display text-foreground">Score distribution</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           {buckets.map((b) => (
@@ -96,20 +96,20 @@ export default async function AdminOverviewPage() {
               key={b.label}
               className="grid grid-cols-[64px_1fr_48px] items-center gap-3"
             >
-              <span className="font-mono text-xs text-zinc-400">{b.label}</span>
-              <div className="h-3 overflow-hidden rounded-full bg-zinc-800">
+              <span className="font-mono text-xs text-foreground-muted">{b.label}</span>
+              <div className="h-3 overflow-hidden rounded-full bg-border">
                 <div
-                  className="h-full rounded-full bg-indigo-500"
+                  className="h-full rounded-full bg-accent"
                   style={{ width: `${Math.round((b.count / maxBucket) * 100)}%` }}
                 />
               </div>
-              <span className="text-right font-mono text-xs text-zinc-300">
+              <span className="text-right font-mono text-xs tabular-nums text-foreground">
                 {b.count}
               </span>
             </div>
           ))}
           {unscoredCount > 0 ? (
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-foreground-subtle">
               {unscoredCount} lead{unscoredCount === 1 ? '' : 's'} not scored yet (pending
               enrichment).
             </p>
@@ -119,51 +119,51 @@ export default async function AdminOverviewPage() {
 
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Recent leads</h2>
+          <h2 className="font-display text-lg font-semibold text-foreground">Recent leads</h2>
           <Link
             href="/admin/leads"
-            className="text-sm text-indigo-400 underline-offset-4 hover:underline"
+            className="text-sm text-accent underline-offset-4 hover:underline"
           >
             View all
           </Link>
         </div>
         {!recent || recent.length === 0 ? (
-          <p className="rounded-xl border border-zinc-800 px-4 py-8 text-center text-sm text-zinc-400">
+          <p className="rounded-lg border border-border px-4 py-8 text-center text-sm text-foreground-muted">
             No leads yet. Submit the form on the landing page to generate one.
           </p>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-zinc-800">
+          <div className="overflow-x-auto rounded-lg border border-border shadow-card">
             <Table>
               <TableHeader>
-                <TableRow className="border-zinc-800">
-                  <TableHead className="text-zinc-400">Reference</TableHead>
-                  <TableHead className="text-zinc-400">Lead</TableHead>
-                  <TableHead className="text-right text-zinc-400">Score</TableHead>
-                  <TableHead className="text-zinc-400">Status</TableHead>
-                  <TableHead className="text-zinc-400">Created</TableHead>
+                <TableRow className="border-border">
+                  <TableHead className="text-foreground-muted">Reference</TableHead>
+                  <TableHead className="text-foreground-muted">Lead</TableHead>
+                  <TableHead className="text-right text-foreground-muted">Score</TableHead>
+                  <TableHead className="text-foreground-muted">Status</TableHead>
+                  <TableHead className="text-foreground-muted">Created</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {(recent as Lead[]).map((l) => (
-                  <TableRow key={l.id} className="border-zinc-800">
+                  <TableRow key={l.id} className="border-border">
                     <TableCell>
                       <Link
                         href={`/admin/leads/${l.id}`}
-                        className="font-mono text-xs text-indigo-400 underline-offset-4 hover:underline"
+                        className="font-mono text-xs text-accent underline-offset-4 hover:underline"
                       >
                         {l.reference_code}
                       </Link>
                     </TableCell>
-                    <TableCell className="text-zinc-300">
+                    <TableCell className="text-foreground">
                       {l.company || l.name}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-sm text-zinc-200">
+                    <TableCell className="text-right font-mono text-sm tabular-nums text-foreground">
                       {l.score_total ?? '—'}
                     </TableCell>
                     <TableCell>
                       <StatusBadge status={l.status} />
                     </TableCell>
-                    <TableCell className="text-zinc-400">
+                    <TableCell className="font-mono text-xs text-foreground-muted">
                       {timeAgo(l.created_at)}
                     </TableCell>
                   </TableRow>
