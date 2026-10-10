@@ -108,6 +108,11 @@
   --space-block-y: clamp(3rem, 5vw, 5rem);
   --space-element-y: 1.5rem;
   --space-inline: 1rem;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 700ms;
   --sidebar: #0f1114;
   --sidebar-foreground: #f0f2f5;
   --sidebar-primary: #22d3ee;
@@ -161,6 +166,11 @@
   --space-block-y: clamp(3rem, 5vw, 5rem);
   --space-element-y: 1.5rem;
   --space-inline: 1rem;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 700ms;
   --sidebar: #0f1114;
   --sidebar-foreground: #f0f2f5;
   --sidebar-primary: #22d3ee;
@@ -192,5 +202,74 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--accent);
+  }
+
+  /* One-shot scroll reveal. JS adds .reveal-visible on first entry;
+     the media query below keeps content visible when motion is off. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    visibility: hidden;
+  }
+  .reveal-visible {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+  }
+
+  /* Ambient hero mesh — three slow-drifting radial washes. */
+  .animate-drift-a {
+    animation: signal-drift-a 32s ease-in-out infinite;
+  }
+  .animate-drift-b {
+    animation: signal-drift-b 24s ease-in-out infinite;
+  }
+  .animate-drift-c {
+    animation: signal-drift-c 40s ease-in-out infinite;
+  }
+}
+
+@keyframes signal-drift-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(4%, -3%) scale(1.08);
+  }
+}
+
+@keyframes signal-drift-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1.05);
+  }
+  50% {
+    transform: translate(-5%, 4%) scale(1);
+  }
+}
+
+@keyframes signal-drift-c {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(3%, 5%) scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+    transition: none !important;
+  }
+  .animate-drift-a,
+  .animate-drift-b,
+  .animate-drift-c {
+    animation: none;
   }
 }

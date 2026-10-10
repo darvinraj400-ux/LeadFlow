@@ -59,6 +59,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${display.variable} ${mono.variable} h-full antialiased`}
     >
       <body className={`${inter.className} min-h-full flex flex-col`}>
+        <noscript>
+          <style>{'.reveal{opacity:1 !important;transform:none !important;visibility:visible !important;}'}</style>
+        </noscript>
         {children}
         <Toaster />
       </body>

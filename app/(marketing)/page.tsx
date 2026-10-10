@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { ArrowRight, Gauge, Inbox, Route } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { LeadForm } from '@/components/form/LeadForm';
+import { HeroAtmosphere } from '@/components/marketing/HeroAtmosphere';
+import { HeroScore } from '@/components/marketing/HeroScore';
+import { MagneticCta } from '@/components/marketing/MagneticCta';
+import { Reveal } from '@/components/marketing/Reveal';
 
 export const metadata: Metadata = {
   title: 'Inbound that routes itself',
@@ -11,17 +15,17 @@ export const metadata: Metadata = {
 
 const FEATURES = [
   {
-    icon: Inbox,
+    n: '01',
     title: 'AI enrichment',
     body: 'Every submission is classified — company size, industry, intent, budget signal — seconds after it arrives.',
   },
   {
-    icon: Gauge,
+    n: '02',
     title: 'Transparent scoring',
     body: 'Fixed rubric, fixed weights. The score is deterministic given the extraction — no black-box 78/100.',
   },
   {
-    icon: Route,
+    n: '03',
     title: 'Smart routing',
     body: 'Hot leads surface to sales instantly, warm ones queue for review, spam archives itself without contact.',
   },
@@ -68,7 +72,7 @@ const BENTO = [
     eyebrow: 'Trace',
     title: 'Every decision logged.',
     body: 'Timestamped, reviewed, and traceable from lead to action.',
-    span: false,
+    span: true,
   },
 ];
 
@@ -99,23 +103,38 @@ export default function MarketingHomePage() {
       </header>
 
       <main className="mx-auto flex w-full max-w-6xl flex-col px-6">
-        <section className="flex flex-col items-center gap-6 py-[var(--space-section-y)] text-center">
+        <section className="relative flex flex-col items-center gap-6 overflow-hidden py-[var(--space-section-y)] text-center">
+          <HeroAtmosphere />
+          <div className="relative z-10 flex w-full flex-col items-center gap-6">
           <p className="rounded-full border border-border bg-surface px-3 py-1 font-mono text-xs text-foreground-muted">
             Relay — a fictional CRM product
           </p>
-          <h1 className="max-w-3xl font-display text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-[0.95] tracking-[-0.035em]">
-            Inbound that routes itself.
-          </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-foreground-muted md:text-lg">
-            Relay qualifies, scores, and routes every inbound lead — so your
-            team only sees the ones worth their time.
+          <Reveal>
+            <h1 className="max-w-3xl font-display text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-[0.95] tracking-[-0.035em]">
+              Inbound that routes itself.
+            </h1>
+          </Reveal>
+          <Reveal delay={80}>
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-foreground-muted md:text-lg">
+              Relay qualifies, scores, and routes every inbound lead — so your
+              team only sees the ones worth their time.
+            </p>
+          </Reveal>
+          <HeroScore />
+          <Reveal delay={120}>
+            <MagneticCta>
+              <Link
+                href="#demo"
+                className="inline-flex items-center gap-2 rounded-[8px] bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground shadow-glow hover:brightness-110"
+              >
+                Try the live demo <ArrowRight className="h-4 w-4" />
+              </Link>
+            </MagneticCta>
+          </Reveal>
+          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-foreground-subtle">
+            Pick a demo below · See the score breakdown in admin
           </p>
-          <Link
-            href="#demo"
-            className="inline-flex items-center gap-2 rounded-[8px] bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground shadow-glow hover:brightness-110"
-          >
-            Try the live demo <ArrowRight className="h-4 w-4" />
-          </Link>
+          </div>
         </section>
 
         <section id="demo" className="grid gap-8 py-[var(--space-section-y)] md:grid-cols-5">
@@ -124,38 +143,44 @@ export default function MarketingHomePage() {
               What Relay does with one form fill
             </h2>
             <ul className="flex flex-col gap-5">
-              {FEATURES.map((f) => (
-                <li key={f.title} className="flex gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface">
-                    <f.icon className="h-5 w-5 text-accent" />
-                  </span>
-                  <span>
-                    <span className="block font-medium">{f.title}</span>
-                    <span className="block text-sm leading-relaxed text-foreground-muted">
-                      {f.body}
+              {FEATURES.map((f, i) => (
+                <li key={f.title}>
+                  <Reveal delay={i * 80} className="flex gap-4">
+                    <span className="font-mono text-xs leading-6 text-accent">
+                      {f.n}
                     </span>
-                  </span>
+                    <span>
+                      <span className="block font-display font-medium">{f.title}</span>
+                      <span className="block text-sm leading-relaxed text-foreground-muted">
+                        {f.body}
+                      </span>
+                    </span>
+                  </Reveal>
                 </li>
               ))}
             </ul>
           </div>
           <div className="md:col-span-2">
-            <div className="rounded-lg border border-border bg-surface p-6 shadow-card">
+            <Reveal delay={120}>
+              <div className="rounded-lg border border-border bg-surface p-6 shadow-card">
               <p className="mb-4 font-mono text-xs uppercase tracking-[0.12em] text-accent">
                 Get a demo — this form is live
               </p>
               <LeadForm />
-            </div>
+              </div>
+            </Reveal>
           </div>
         </section>
 
-        <section id="features" className="grid grid-cols-1 gap-4 py-[var(--space-section-y)] md:grid-cols-3 md:grid-rows-2">
+        <section id="features" className="grid grid-cols-1 gap-4 py-[var(--space-section-y)] md:grid-cols-2 lg:grid-cols-3">
           {BENTO.map((cell, i) => (
-            <div
+            <Reveal
               key={cell.title}
-              className={`flex flex-col gap-3 rounded-lg border border-border bg-surface p-6 shadow-card ${
-                cell.span || i === BENTO.length - 1 ? 'md:col-span-2' : ''
-              }`}
+              delay={(i % 2) * 80}
+              className={cell.span ? 'lg:col-span-2' : ''}
+            >
+            <div
+              className="flex h-full flex-col gap-3 rounded-lg border border-border bg-surface p-6 shadow-card"
             >
               <span className="eyebrow">{cell.eyebrow}</span>
               <h3 className="font-display text-xl font-semibold tracking-[-0.02em]">
@@ -163,6 +188,7 @@ export default function MarketingHomePage() {
               </h3>
               <p className="text-sm leading-relaxed text-foreground-muted">{cell.body}</p>
             </div>
+            </Reveal>
           ))}
         </section>
 
@@ -171,15 +197,16 @@ export default function MarketingHomePage() {
             How it works
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
-            {STEPS.map((s) => (
+            {STEPS.map((s, i) => (
+              <Reveal key={s.n} delay={i * 80}>
               <div
-                key={s.n}
-                className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-6 shadow-card"
+                className="flex h-full flex-col gap-2 rounded-lg border border-border bg-surface p-6 shadow-card"
               >
                 <span className="font-mono text-sm text-accent">{s.n}</span>
                 <h3 className="font-semibold">{s.title}</h3>
                 <p className="text-sm leading-relaxed text-foreground-muted">{s.body}</p>
               </div>
+              </Reveal>
             ))}
           </div>
         </section>
